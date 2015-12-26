@@ -15,12 +15,17 @@ public class Board {
     /**
      * Number of moves played by me.
      */
-    private byte nMyMoves = 0;
+    private int nMyMoves = 0;
 
     /**
      * Total number of moves.
      */
-    private byte nMoves = 0;
+    private int nMoves = 0;
+
+    /**
+     * Total number of fields.
+     */
+    private int nFields;
 
     /**
      * Top edge of the board.
@@ -48,6 +53,7 @@ public class Board {
 
     public Board(int dimensions, boolean playerIsVertical) {
         this.fields = new Field[dimensions][dimensions];
+        this.nFields = (int) (dimensions * dimensions);
 
         Owner verticalPlayer = playerIsVertical ? Owner.Me : Owner.Other;
         Owner horizontalPlayer = playerIsVertical ? Owner.Other : Owner.Me;
@@ -151,8 +157,12 @@ public class Board {
         return free;
     }
 
-    public byte getNumberOfMoves() {
+    public int getNumberOfMoves() {
         return nMoves;
+    }
+
+    public int getNFree() {
+        return nFields - nMoves;
     }
 
     public int getDimensions() {

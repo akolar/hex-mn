@@ -1,6 +1,7 @@
 package s63150020;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import skupno.Polje;
@@ -60,19 +61,20 @@ public class MoveMaker {
         long startTime = System.currentTimeMillis();
         Polje move = null;
 
-        /*
         if(strongPointsFree) {
             move = makeFirstMove();
             if(move != null) {
                 return move;
             }
         }
-        */
 
-        if(remainingTime < TIME_CRITICAL) {
+        if((remainingTime < TIME_CRITICAL) && (board.getNFree() > 50)) {
             move = makeRandom();
+        } else if(remainingTime < TIME_CRITICAL) {
+            Logger.log(board.getNFree() + "");
+            move = calculateMove(45);
         } else {
-            int allocatedTime = (int) Math.sqrt(remainingTime);
+            int allocatedTime = calcAllocatedTime((int) remainingTime);
             move = calculateMove(allocatedTime);
         }
 
@@ -132,32 +134,28 @@ public class MoveMaker {
 
     private Polje calculateMove(int allocatedTime) {
         ArrayList<Field> empty = board.getFreeFields();
+        int[] gamesWon = new int[empty.size()];
+        int played = 0;
 
-        Field best = empty.get(0);
-        int winrate = 0;
+        long start = System.currentTimeMillis();
+        for(; played < 1000; played++) {
+            for(int i = 0; i < gamesWon.length; i++) {
 
-        for(Field f : empty) {
-            int nWon = 0;
-            int nPlayed = 0;
-
-            for(int i = 0; i < 2000; i++) {
-                boolean won = runSim(f);
-
-                nPlayed++;
+                boolean won = runSim(empty.get(i));
                 if(won) {
-                    nWon++;
+                    gamesWon[i]++;
                 }
             }
 
-            int currWinrate = (int) (nWon * 1000 / nPlayed);
-            if(currWinrate > winrate) {
-                best = f;
-                winrate = currWinrate;
-                if(winrate > 900) {
-                    break;
-                }
+            if((System.currentTimeMillis() - start) > allocatedTime) {
+                break;
             }
         }
+
+        Logger.log(String.format("Time: %4d / %4d, nPasses: %d", System.currentTimeMillis() - start, allocatedTime, played));
+
+        ArrayList<Integer> list = Utilities.findMax(gamesWon);
+        Field best = empty.get(list.get(generator.nextInt(list.size())));
 
         best.setOwner(Owner.Me);
         return best.toPolje();
@@ -168,7 +166,6 @@ public class MoveMaker {
 
         nextMove.simOwner(Owner.Me);
         ArrayList<Field> options = board.getFreeFields(true);
-
 
         boolean connectedMe = board.edgesConnected(Owner.Me, true);
         boolean connectedOther = false;
@@ -185,5 +182,16 @@ public class MoveMaker {
         }
 
         return connectedMe;
+    }
+
+    private int calcAllocatedTime(int remaining) {
+        int free = board.getNFree();
+
+        int t = (int) Math.sqrt((remaining * remaining) / (free * Math.sqrt(free * 4 / 7)));
+        return t * 6 / 3;
+
+        // Pretty good:
+        //int t = (int) Math.sqrt((remaining * remaining) / (free * free));
+        //return t * 10;
     }
 }
