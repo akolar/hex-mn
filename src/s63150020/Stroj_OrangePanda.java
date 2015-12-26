@@ -33,6 +33,11 @@ public class Stroj_OrangePanda implements Stroj {
 
 
     public Stroj_OrangePanda() {
+        String hexDebug = System.getenv("HEX_DEBUG");
+        if(hexDebug != null) {
+            Logger.setLevel(Integer.parseInt(hexDebug));
+        }
+
         Logger.startUpSequence();
         this.score = new int[2];
     }
@@ -60,7 +65,7 @@ public class Stroj_OrangePanda implements Stroj {
     @Override
     public void rezultat(boolean won) {
         if(won) {
-            stihDance();
+            Logger.stihDance();
             score[0]++;
         } else {
             score[1]++;
@@ -69,12 +74,5 @@ public class Stroj_OrangePanda implements Stroj {
         playing = false;
 
         Logger.log(String.format("Game %s. Current score: %d:%d", won ? "won" : "lost", score[0], score[1]));
-    }
-
-    private void stihDance() {
-        System.out.println("    \\o-");
-        System.out.println("    -o/");
-        System.out.println("    -o.");
-        System.out.println("    .o-");
     }
 }

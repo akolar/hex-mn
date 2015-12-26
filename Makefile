@@ -1,5 +1,7 @@
 .PHONY: build
 BSIZE=11
+HEX_DEBUG=5
+export HEX_DEBUG
 
 build:
 	javac -encoding UTF-8 -sourcepath src -d build/classes @javadat.txt
