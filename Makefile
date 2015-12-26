@@ -13,7 +13,7 @@ run: build
 		-1 s63150020.Stroj_OrangePanda\
 		-2 s12345678.Stroj_Nakljucko\
 		-d local/dnevnik.txt -n 10 -t 15000\
-		-z 100 -zz 1000
+		-z 1 -zz 1000
 
 runh: build
 	java -cp build/classes ogrodje.Hex\
@@ -22,7 +22,7 @@ runh: build
 		-1 s63150020.Stroj_OrangePanda\
 		-2 s12345678.Stroj_Nakljucko\
 		-d local/dnevnik.txt -n 10 -t 15000\
-		-z 100 -zz 1000\
+		-z 1 -zz 1000\
 		-b
 
 human: build
@@ -31,7 +31,7 @@ human: build
 		-i\
 		-1 s63150020.Stroj_OrangePanda\
 		-d local/dnevnik.txt -n 10 -t 15000\
-		-z 100 -zz 1000
+		-z 1 -zz 1000
 
 clean:
 	rm -r build/
