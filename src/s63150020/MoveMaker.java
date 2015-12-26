@@ -51,21 +51,26 @@ public class MoveMaker {
         this.generator = new Random();
     }
 
+    /**
+     * Chooses the next move by using predefined presets or using MC-UCT algorithm.
+     *
+     * Note: If move is made in under 50 ms, supervisor does not substract time!
+     */
     public Polje nextMove(long remainingTime) {
-        Polje move;
+        long startTime = System.currentTimeMillis();
+        Polje move = null;
 
         if(strongPointsFree) {
             move = makeFirstMove();
-            if(move != null) {
-                return move;
-            }
         }
 
-        if(true) {
+        if(move == null) {
         //if(remainingTime < TIME_CRITICAL) {
-            return makeRandom();
+            move = makeRandom();
         }
 
+        long elapsed = System.currentTimeMillis() - startTime;
+        Logger.log(String.format("Made move in %-3d ms. %-5d ms remaining", elapsed, remainingTime - elapsed));
         return move;
     }
 
