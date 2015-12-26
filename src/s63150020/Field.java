@@ -27,6 +27,11 @@ public class Field {
     private Owner owner = Owner.Empty;
 
     /**
+     * Owner of this field when running simulations.
+     */
+    private Owner simOwner = Owner.Empty;
+
+    /**
      * Vertical position of this field.
      */
     private final int y;
@@ -63,6 +68,11 @@ public class Field {
         }
 
         this.owner = newOwner;
+        this.simOwner = newOwner;
+    }
+
+    public void resetSimOwner() {
+        simOwner = owner;
     }
 
     public boolean isFree() {

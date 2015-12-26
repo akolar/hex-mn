@@ -178,6 +178,14 @@ public class Board {
         return connectionExists(first, second, visited);
     }
 
+    public void resetSim() {
+        for(int y = 0; y < fields.length; y++) {
+            for(int x = 0; x < fields.length; x++) {
+                fields[y][x].resetSimOwner();
+            }
+        }
+    }
+
     private boolean connectionExists(Field start, Field finish, HashSet<Field> visited) {
         ArrayList<Field> neighbours = start.getNeighbours(start.getOwner());
 
