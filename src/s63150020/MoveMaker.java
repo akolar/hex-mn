@@ -70,7 +70,7 @@ public class MoveMaker {
         }
 
         long elapsed = System.currentTimeMillis() - startTime;
-        Logger.log(String.format("Made move in %-3d ms. %-5d ms remaining", elapsed, remainingTime - elapsed));
+        Logger.log(String.format("Made move in %3d ms. %5d ms remaining", elapsed, remainingTime - elapsed));
         return move;
     }
 
