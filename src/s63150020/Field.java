@@ -12,16 +12,6 @@ enum Owner {
 public class Field {
 
     /**
-     * Field is on the red edge.
-     */
-    private final boolean redBorder;
-
-    /**
-     * Field is on the blue edge.
-     */
-    private final boolean blueBorder;
-
-    /**
      * Owner of this field.
      */
     private Owner owner = Owner.Empty;
@@ -39,21 +29,14 @@ public class Field {
     /**
      * List of neighbouring fields.
      */
-    private ArrayList<Field> neighbours = new ArrayList<>();
+    private ArrayList<Field> neighbours = new ArrayList<>(8);
 
-    public Field(int y, int x, int boardDimensions) {
-        if((y == 0) || (y == (boardDimensions - 1))) {
-            this.redBorder = true;
-        } else {
-            this.redBorder = false;
-        }
+    public Field(int y, int x, Owner owner) {
+        this(y, x);
+        this.owner = owner;
+    }
 
-        if((x == 0) || (x == (boardDimensions - 1))) {
-            this.blueBorder = true;
-        } else {
-            this.blueBorder = false;
-        }
-
+    public Field(int y, int x) {
         this.y = y;
         this.x = x;
     }

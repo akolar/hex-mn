@@ -41,7 +41,7 @@ public class Stroj_OrangePanda implements Stroj {
     public void novaPartija(int dimensions, boolean isRed) {
         Logger.log(String.format("New game started. Playing as %s.", isRed ? "red" : "blue"));
 
-        board = new Board(dimensions);
+        board = new Board(dimensions, isRed);
         movemaker = new MoveMaker(board, isRed);
         playing = true;
     }

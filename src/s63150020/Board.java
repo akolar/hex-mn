@@ -21,21 +21,67 @@ public class Board {
      */
     private byte nMoves = 0;
 
-    public Board(int dimensions) {
+    /**
+     * Top edge of the board.
+     * Default owner is red.
+     */
+    private Field topEdge;
+
+    /**
+     * Bottom edge of the board.
+     * Default owner is red.
+     */
+    private Field bottomEdge;
+    
+    /**
+     * Left edge of the board.
+     * Default owner is blue.
+     */
+    private Field leftEdge;
+
+    /**
+     * Left edge of the board.
+     * Default owner is blue.
+     */
+    private Field rightEdge;
+
+    public Board(int dimensions, boolean playerIsVertical) {
         this.fields = new Field[dimensions][dimensions];
+
+        Owner verticalPlayer = playerIsVertical ? Owner.Me : Owner.Other;
+        Owner horizontalPlayer = playerIsVertical ? Owner.Other : Owner.Me;
+
+        this.leftEdge = new Field(-1, -1, horizontalPlayer);
+        this.bottomEdge = new Field(dimensions, -1, horizontalPlayer);
+        this.rightEdge = new Field(dimensions, dimensions, horizontalPlayer);
+        this.topEdge = new Field(-1, dimensions, horizontalPlayer);
 
         for(int y = 0; y < dimensions; y++) {
             for(int x = 0; x < dimensions; x++) {
-                this.fields[y][x] = new Field(y, x, dimensions);
+                this.fields[y][x] = new Field(y, x);
             }
         }
 
         // novaPartija() is hopefully not timed... :?
         for(int y = 0; y < dimensions; y++) {
             for(int x = 0; x < dimensions; x++) {
+                Field f = fields[y][x];
+
+                if(y == 0) {
+                    f.addNeighbour(this.topEdge);
+                } else if(y == (dimensions - 1)) {
+                    f.addNeighbour(this.bottomEdge);
+                }
+
+                if(x == 0) {
+                    f.addNeighbour(this.leftEdge);
+                } else if(x == (dimensions - 1)) {
+                    f.addNeighbour(this.rightEdge);
+                }
+
                 for(int linkY = Math.max(y - 1, 0); linkY < Math.min(y + 2, dimensions); linkY++) {
                     for(int linkX = Math.max(x - 1, 0); linkX < Math.min(x + 2, dimensions); linkX++) {
-                        this.fields[y][x].addNeighbour(this.fields[linkY][linkX]);
+                        f.addNeighbour(this.fields[linkY][linkX]);
                     }
                 }
             }
