@@ -120,11 +120,15 @@ public class Board {
     }
 
     public ArrayList<Field> getFreeFields() {
+        return getFreeFields(false);
+    }
+
+    public ArrayList<Field> getFreeFields(boolean sim) {
         ArrayList<Field> free = new ArrayList<>();
 
         for(Field[] row : fields) {
             for(Field f : row) {
-                if(f.isFree()) {
+                if(f.isFree(sim)) {
                     free.add(f);
                 }
             }
@@ -163,10 +167,14 @@ public class Board {
     }
 
     public boolean edgesConnected(Owner owner) {
+        return edgesConnected(owner, false);
+    }
+
+    public boolean edgesConnected(Owner owner, boolean sim) {
         Field first;
         Field second;
 
-        if(bottomEdge.getOwner() == owner) {
+        if(bottomEdge.getOwner(sim) == owner) {
             first = topEdge;
             second = bottomEdge;
         } else {
@@ -175,7 +183,7 @@ public class Board {
         }
 
         HashSet<Field> visited = new HashSet<>();
-        return connectionExists(first, second, visited);
+        return connectionExists(first, second, visited, sim);
     }
 
     public void resetSim() {
@@ -186,8 +194,8 @@ public class Board {
         }
     }
 
-    private boolean connectionExists(Field start, Field finish, HashSet<Field> visited) {
-        ArrayList<Field> neighbours = start.getNeighbours(start.getOwner());
+    private boolean connectionExists(Field start, Field finish, HashSet<Field> visited, boolean sim) {
+        ArrayList<Field> neighbours = start.getNeighbours(start.getOwner(sim), sim);
 
         for(Field neighbour : neighbours) {
             if(visited.contains(neighbour)) {
@@ -199,7 +207,7 @@ public class Board {
             }
 
             visited.add(neighbour);
-            boolean connected = connectionExists(neighbour, finish, visited);
+            boolean connected = connectionExists(neighbour, finish, visited, sim);
             if(connected) {
                 return true;
             }

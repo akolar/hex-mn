@@ -60,17 +60,26 @@ public class MoveMaker {
         long startTime = System.currentTimeMillis();
         Polje move = null;
 
+        /*
         if(strongPointsFree) {
             move = makeFirstMove();
+            if(move != null) {
+                return move;
+            }
         }
+        */
 
-        if(move == null) {
-        //if(remainingTime < TIME_CRITICAL) {
+        if(remainingTime < TIME_CRITICAL) {
             move = makeRandom();
+        } else {
+            int allocatedTime = (int) Math.sqrt(remainingTime);
+            move = calculateMove(allocatedTime);
         }
 
         long elapsed = System.currentTimeMillis() - startTime;
         Logger.log(String.format("Made move in %3d ms. %5d ms remaining", elapsed, remainingTime - elapsed));
+        
+        assert(move != null);
         return move;
     }
 
@@ -79,10 +88,15 @@ public class MoveMaker {
 
         if(board.isFree(boardDimensions / 2, boardDimensions / 2)) {
             move = board.play(Owner.Me, boardDimensions / 2, boardDimensions / 2);
+        /*
+        } else if(boardDimensions > 6) {
+            strongPointsFree = false;
+            return null;
         } else if(board.isFree(1, -1)) {
             move = board.play(Owner.Me, 1, -1);
         } else if(board.isFree(-1, 1)) {
             move = board.play(Owner.Me, -1, 1);
+        */
         } else {
             strongPointsFree = false;
             return null;
@@ -114,5 +128,62 @@ public class MoveMaker {
 
         move.setOwner(Owner.Me);
         return move.toPolje();
+    }
+
+    private Polje calculateMove(int allocatedTime) {
+        ArrayList<Field> empty = board.getFreeFields();
+
+        Field best = empty.get(0);
+        int winrate = 0;
+
+        for(Field f : empty) {
+            int nWon = 0;
+            int nPlayed = 0;
+
+            for(int i = 0; i < 2000; i++) {
+                boolean won = runSim(f);
+
+                nPlayed++;
+                if(won) {
+                    nWon++;
+                }
+            }
+
+            int currWinrate = (int) (nWon * 1000 / nPlayed);
+            if(currWinrate > winrate) {
+                best = f;
+                winrate = currWinrate;
+                if(winrate > 900) {
+                    break;
+                }
+            }
+        }
+
+        best.setOwner(Owner.Me);
+        return best.toPolje();
+    }
+
+    private boolean runSim(Field nextMove) {
+        board.resetSim();
+
+        nextMove.simOwner(Owner.Me);
+        ArrayList<Field> options = board.getFreeFields(true);
+
+
+        boolean connectedMe = board.edgesConnected(Owner.Me, true);
+        boolean connectedOther = false;
+        boolean myTurn = false;
+        while(!connectedMe && !connectedOther) {
+            int choice = generator.nextInt(options.size());
+            Field move = options.get(choice);
+            options.remove(choice);
+            move.simOwner(myTurn ? Owner.Me : Owner.Other);
+            myTurn = !myTurn;
+
+            connectedMe = board.edgesConnected(Owner.Me, true);
+            connectedOther = board.edgesConnected(Owner.Other, true);
+        }
+
+        return connectedMe;
     }
 }

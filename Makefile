@@ -9,6 +9,15 @@ build:
 	
 all: build run
 
+vsself: build
+	java -cp build/classes ogrodje.Hex\
+		-s $(BSIZE)\
+		-i\
+		-1 s63150020.Stroj_OrangePanda\
+		-2 s63150020.Stroj_OrangePanda\
+		-d local/dnevnik.txt -n $(GAMES) -t 15000\
+		-z 1 -zz 1000
+
 run: build
 	java -cp build/classes ogrodje.Hex\
 		-s $(BSIZE)\

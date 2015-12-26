@@ -49,6 +49,7 @@ public class Field {
     public Field(int y, int x, Owner owner) {
         this(y, x);
         this.owner = owner;
+        this.simOwner = owner;
     }
 
     public Field(int y, int x) {
@@ -71,11 +72,27 @@ public class Field {
         this.simOwner = newOwner;
     }
 
+    public void simOwner(Owner newOwner) {
+        if((simOwner == Owner.Me) || (simOwner == Owner.Other)) {
+            return;
+        }
+
+        this.simOwner = newOwner;
+    }
+
     public void resetSimOwner() {
         simOwner = owner;
     }
 
     public boolean isFree() {
+        return isFree(false);
+    }
+
+    public boolean isFree(boolean sim) {
+        if(sim) {
+            return (simOwner == Owner.Empty) || (simOwner == Owner.AssumePlayed);
+        }
+
         return (owner == Owner.Empty) || (owner == Owner.AssumePlayed);
     }
 
@@ -88,7 +105,11 @@ public class Field {
     }
 
     public Owner getOwner() {
-        return owner;
+        return getOwner(false);
+    }
+    
+    public Owner getOwner(boolean sim) {
+        return sim ? simOwner : owner;
     }
 
     public ArrayList<Field> getNeighbours() {
@@ -96,10 +117,14 @@ public class Field {
     }
 
     public ArrayList<Field> getNeighbours(Owner owner) {
+        return getNeighbours(owner, false);
+    }
+
+    public ArrayList<Field> getNeighbours(Owner owner, boolean sim) {
         ArrayList<Field> fields = new ArrayList<>();
         
         for(Field f : neighbours) {
-            if(f.getOwner() == owner) {
+            if(f.getOwner(sim) == owner) {
                 fields.add(f);
             }
         }
