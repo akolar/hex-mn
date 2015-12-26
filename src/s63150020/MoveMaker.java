@@ -69,6 +69,7 @@ public class MoveMaker {
             move = makeRandom();
         }
 
+        Logger.log(String.format("Me: %s, Other: %s", board.edgesConnected(Owner.Me), board.edgesConnected(Owner.Other)));
         long elapsed = System.currentTimeMillis() - startTime;
         Logger.log(String.format("Made move in %-3d ms. %-5d ms remaining", elapsed, remainingTime - elapsed));
         return move;

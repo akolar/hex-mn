@@ -6,7 +6,17 @@ import skupno.Polje;
 
 
 enum Owner { 
-    Me, Other, AssumePlayed, Empty 
+    Me(Stroj_OrangePanda.NAME), Other("Other"), AssumePlayed(Stroj_OrangePanda.NAME + "-Assumed"), Empty("Empty");
+
+    private String name; 
+
+    private Owner(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
 
 public class Field {
@@ -29,7 +39,7 @@ public class Field {
     /**
      * List of neighbouring fields.
      */
-    private ArrayList<Field> neighbours = new ArrayList<>(8);
+    private ArrayList<Field> neighbours; 
 
     public Field(int y, int x, Owner owner) {
         this(y, x);
@@ -39,6 +49,8 @@ public class Field {
     public Field(int y, int x) {
         this.y = y;
         this.x = x;
+
+        neighbours = new ArrayList<>(8);
     }
 
     public void addNeighbour(Field other) {
@@ -63,5 +75,61 @@ public class Field {
     
     public Polje toPolje() {
         return new Polje(y, x);
+    }
+
+    public Owner getOwner() {
+        return owner;
+    }
+
+    public ArrayList<Field> getNeighbours() {
+        return neighbours;
+    }
+
+    public ArrayList<Field> getNeighbours(Owner owner) {
+        ArrayList<Field> fields = new ArrayList<>();
+        
+        for(Field f : neighbours) {
+            if(f.getOwner() == owner) {
+                fields.add(f);
+            }
+        }
+
+        return fields;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public String toString() {
+        if((x == -2) && (y == -2)) {
+            return "Left edge";
+        } else if(y == -2) {
+            return "Top edge";
+        } else if((y == -1) && (x == -1)) {
+            return "Right edge";
+        } else if(y == -1) {
+            return "Bottom edge";
+        }
+
+        return String.format("Field: %d:%d", y, x);
+    }
+
+    public boolean equals(Object o) {
+        if(!(o instanceof Field)) {
+            return false;
+        }
+
+        Field other = (Field) o;
+
+        if(o == this) {
+            return true;
+        }
+
+        return (this.x == other.getX()) && (this.y == other.getY());
     }
 }
