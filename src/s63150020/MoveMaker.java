@@ -88,8 +88,13 @@ public class MoveMaker {
     private Polje makeFirstMove() {
         Polje move;
 
-        if(board.isFree(boardDimensions / 2, boardDimensions / 2)) {
-            move = board.play(Owner.Me, boardDimensions / 2, boardDimensions / 2);
+        int centerY = boardDimensions / 2; 
+        int centerX = centerY;
+        if((boardDimensions % 2) == 0) {
+            centerY--;
+        }
+        if(board.isFree(centerY, centerX)) {
+            move = board.play(Owner.Me, centerY, centerX);
         /*
         } else if(boardDimensions > 6) {
             strongPointsFree = false;
