@@ -138,7 +138,7 @@ public class MoveMaker {
         int played = 0;
 
         long start = System.currentTimeMillis();
-        for(; played < 1000; played++) {
+        for(; played < 10000; played++) {
             for(int i = 0; i < gamesWon.length; i++) {
 
                 boolean won = runSim(empty.get(i));
@@ -167,21 +167,17 @@ public class MoveMaker {
         nextMove.simOwner(Owner.Me);
         ArrayList<Field> options = board.getFreeFields(true);
 
-        boolean connectedMe = board.edgesConnected(Owner.Me, true);
-        boolean connectedOther = false;
         boolean myTurn = false;
-        while(!connectedMe && !connectedOther) {
+        while(options.size() > 0) {
             int choice = generator.nextInt(options.size());
             Field move = options.get(choice);
             options.remove(choice);
             move.simOwner(myTurn ? Owner.Me : Owner.Other);
-            myTurn = !myTurn;
 
-            connectedMe = board.edgesConnected(Owner.Me, true);
-            connectedOther = board.edgesConnected(Owner.Other, true);
+            myTurn = !myTurn;
         }
 
-        return connectedMe;
+        return board.edgesConnected(Owner.Me, true);
     }
 
     private int calcAllocatedTime(int remaining) {
