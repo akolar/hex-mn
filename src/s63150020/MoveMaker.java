@@ -71,7 +71,6 @@ public class MoveMaker {
         if((remainingTime < TIME_CRITICAL) && (board.getNFree() > 50)) {
             move = makeRandom();
         } else if(remainingTime < TIME_CRITICAL) {
-            Logger.log(board.getNFree() + "");
             move = calculateMove(45);
         } else {
             int allocatedTime = calcAllocatedTime((int) remainingTime);
@@ -79,7 +78,7 @@ public class MoveMaker {
         }
 
         long elapsed = System.currentTimeMillis() - startTime;
-        Logger.log(String.format("Made move in %3d ms. %5d ms remaining", elapsed, remainingTime - elapsed));
+        Logger.log("Made move in %3d ms. %5d ms remaining", elapsed, remainingTime - elapsed);
         
         assert(move != null);
         return move;
@@ -157,7 +156,7 @@ public class MoveMaker {
             }
         }
 
-        Logger.log(String.format("Time: %4d / %4d, nPasses: %d", System.currentTimeMillis() - start, allocatedTime, played));
+        Logger.log("Time: %4d / %4d, nPasses: %d", System.currentTimeMillis() - start, allocatedTime, played);
 
         ArrayList<Integer> list = Utilities.findMax(gamesWon);
         Field best = empty.get(list.get(generator.nextInt(list.size())));

@@ -35,12 +35,12 @@ public class Logger {
         }
     }
 
-    public static void log(String text) {
+    public static void log(String fstring, Object... fvalues) {
         if(level.getValue() < Verbosity.Log.getValue()) {
             return;
         }
 
-        System.out.printf("(%s) %s\n", Stroj_OrangePanda.NAME, text);
+        System.out.printf("(%s) %s\n", Stroj_OrangePanda.NAME, String.format(fstring, fvalues));
     }
 
     public static void startUpSequence() {
