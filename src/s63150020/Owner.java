@@ -2,7 +2,7 @@ package s63150020;
 
 
 enum Owner { 
-    Me(Stroj_OrangePanda.NAME), Other("Other"), AssumePlayed(Stroj_OrangePanda.NAME + "-Assumed"), Empty("Empty");
+    Me(Stroj_mn.NAME), Other("Other"), AssumePlayed(Stroj_mn.NAME + "-Assumed"), Empty("Empty");
 
     private String name; 
 
