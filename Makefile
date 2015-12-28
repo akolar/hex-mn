@@ -16,8 +16,8 @@ vsself: build
 	java -cp build/classes ogrodje.Hex\
 		-s $(BSIZE)\
 		-i\
-		-1 s63150020.Stroj_OrangePanda\
-		-2 s63150020.Stroj_OrangePanda\
+		-1 s63150020.Stroj_mn\
+		-2 s63150020.Stroj_mn\
 		-d local/dnevnik.txt -n $(GAMES) -t $(TIME)\
 		-z 1 -zz 1000
 
@@ -25,7 +25,7 @@ run: build
 	java -cp build/classes ogrodje.Hex\
 		-s $(BSIZE)\
 		-i\
-		-1 s63150020.Stroj_OrangePanda\
+		-1 s63150020.Stroj_mn\
 		-2 s87654321.Stroj_OldPanda\
 		-d local/dnevnik.txt -n $(GAMES) -t $(TIME)\
 		-z 1 -zz 1000
@@ -34,7 +34,7 @@ human: build
 	java -cp build/classes ogrodje.Hex\
 		-s $(BSIZE)\
 		-i\
-		-1 s63150020.Stroj_OrangePanda\
+		-1 s63150020.Stroj_mn\
 		-d local/dnevnik.txt -n $(GAMES) -t $(TIME)
 
 clean:
