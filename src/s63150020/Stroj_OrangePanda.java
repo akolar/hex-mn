@@ -1,7 +1,7 @@
 package s63150020;
 
-import skupno.Stroj;
 import skupno.Polje;
+import skupno.Stroj;
 
 
 public class Stroj_OrangePanda implements Stroj {
