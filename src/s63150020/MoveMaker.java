@@ -74,7 +74,7 @@ public class MoveMaker {
             move = calculateMove(45);
         } else {
             int allocatedTime = calcAllocatedTime((int) remainingTime);
-            move = calculateMove(allocatedTime);
+            move = monteCarlo(allocatedTime);
         }
 
         long elapsed = System.currentTimeMillis() - startTime;
@@ -182,6 +182,59 @@ public class MoveMaker {
         }
 
         return board.edgesConnected(Owner.Me, true);
+    }
+
+    private Polje monteCarlo(int allocatedTime) {
+        Node root = new Node(null, null);
+        root.createChildren(board.getFreeFields());
+
+        long start = System.currentTimeMillis();
+        while((System.currentTimeMillis() - start) < allocatedTime) {
+            monteCarloUctSearch(root);
+        }
+
+        Field best = root.getBestMove();
+        best.setOwner(Owner.Me);
+        return best.toPolje();
+    }
+
+    private void monteCarloUctSearch(Node root) {
+        board.resetSim();
+
+        Node next = root;
+        boolean playerMoves = true;
+        int depth = 0;
+        while(next.hasChildren() && (depth <= 10)) {
+            next = next.chooseChild();
+            next.getMove().simOwner(playerMoves ? Owner.Me : Owner.Other);
+            playerMoves = !playerMoves;
+            depth++;
+        }
+
+        if(!next.hasChildren()) {
+            next.createChildren(board.getFreeFields(true));
+        }
+        next.getMove().simOwner(playerMoves ? Owner.Me : Owner.Other);
+        playerMoves = !playerMoves;
+
+        int status = playout(playerMoves);
+        next.updateScore(status);
+    }
+
+    private int playout(boolean playerMoves) {
+        boolean myTurn = playerMoves;
+        ArrayList<Field> options = board.getFreeFields(true);
+
+        while(options.size() > 0) {
+            int choice = generator.nextInt(options.size());
+            Field move = options.get(choice);
+            options.remove(choice);
+            move.simOwner(myTurn ? Owner.Me : Owner.Other);
+
+            myTurn = !myTurn;
+        }
+
+        return board.edgesConnected(Owner.Me, true) ? 1 : 0;
     }
 
     private int calcAllocatedTime(int remaining) {

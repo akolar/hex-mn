@@ -22,4 +22,4 @@
 ./src/ogrodje/GuiRazno.java
 ./src/skupno/Polje.java
 ./src/skupno/Stroj.java
-./src/s63150020/Stroj_OrangePanda.java
+./src/s63150020/Stroj_mn.java

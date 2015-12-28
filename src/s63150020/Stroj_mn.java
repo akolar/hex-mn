@@ -1,13 +1,13 @@
 package s63150020;
 
-import skupno.Stroj;
 import skupno.Polje;
+import skupno.Stroj;
 
 
-public class Stroj_OrangePanda implements Stroj {
+public class Stroj_mn implements Stroj {
 
-    public static final String NAME = "OrangePanda";
-    public static final String VERSION = "0.1b";
+    public static final String NAME = "mn";
+    public static final String VERSION = "0.2b";
 
     /**
      * Score for the current match.
@@ -32,7 +32,7 @@ public class Stroj_OrangePanda implements Stroj {
     private MoveMaker movemaker;
 
 
-    public Stroj_OrangePanda() {
+    public Stroj_mn() {
         String hexDebug = System.getenv("HEX_DEBUG");
         if(hexDebug != null) {
             Logger.setLevel(Integer.parseInt(hexDebug));
@@ -65,7 +65,6 @@ public class Stroj_OrangePanda implements Stroj {
     @Override
     public void rezultat(boolean won) {
         if(won) {
-            Logger.stihDance();
             score[0]++;
         } else {
             score[1]++;

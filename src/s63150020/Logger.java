@@ -15,6 +15,10 @@ public class Logger {
         }
     }
 
+    private static final String ANSI_BOLD = "\033[0;1m";
+    private static final String ANSI_RESET = "\033[0;0m";
+    private static final String LOG_TEMPLATE = ANSI_BOLD + "(%s)" + ANSI_RESET + " %s\n";
+
     private static Verbosity level = Verbosity.Fatal;
 
     public static void setVerbosity(Verbosity newLevel) {
@@ -40,7 +44,7 @@ public class Logger {
             return;
         }
 
-        System.out.printf("(%s) %s\n", Stroj_OrangePanda.NAME, String.format(fstring, fvalues));
+        System.out.printf(LOG_TEMPLATE, Stroj_mn.NAME, String.format(fstring, fvalues));
     }
 
     public static void startUpSequence() {
@@ -48,19 +52,20 @@ public class Logger {
             return;
         }
 
-        System.out.printf ("---------------------> %s <---------------------\n", Stroj_OrangePanda.NAME);
-        System.out.printf ("                          v%-4s                          \n", Stroj_OrangePanda.VERSION);
-        System.out.println("---------------------------------------------------------");
-    }
-
-    public static void stihDance() {
-        if(level.getValue() < Verbosity.All.getValue()) {
-            return;
+        int center = 23 + (Stroj_mn.NAME.length() / 2);
+        String verPadding = "";
+        for(int i = 0; i < (center - (Stroj_mn.VERSION.length() / 2)); i++) {
+            verPadding += " ";
         }
 
-        System.out.println("    \\o-");
-        System.out.println("    -o/");
-        System.out.println("    -o.");
-        System.out.println("    .o-");
+        String bottomBorder = "<<<";
+        for(int i = 0; i < ((center * 2) - 6); i++) {
+            bottomBorder += "-";
+        }
+        bottomBorder += ">>>";
+
+        System.out.printf ("---------------------> %s <---------------------\n", Stroj_mn.NAME);
+        System.out.printf ("%sv%-4s\n", verPadding, Stroj_mn.VERSION);
+        System.out.println(bottomBorder);
     }
 }

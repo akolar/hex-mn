@@ -26,7 +26,7 @@ run: build
 		-s $(BSIZE)\
 		-i\
 		-1 s63150020.Stroj_OrangePanda\
-		-2 s12345678.Stroj_Nakljucko\
+		-2 s87654321.Stroj_OldPanda\
 		-d local/dnevnik.txt -n $(GAMES) -t $(TIME)\
 		-z 1 -zz 1000
 
