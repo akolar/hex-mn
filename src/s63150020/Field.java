@@ -153,4 +153,8 @@ public class Field {
 
         return (this.x == other.getX()) && (this.y == other.getY());
     }
+
+    public int hashCode() {
+        return (y << 4) + x;
+    }
 }
