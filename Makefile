@@ -4,6 +4,7 @@ BSIZE=11
 HEX_DEBUG=5
 GAMES=10
 TIME=15000
+OPPONENT=s87654321.Stroj_OldPanda
 
 export HEX_DEBUG
 
@@ -26,7 +27,7 @@ run: build
 		-s $(BSIZE)\
 		-i\
 		-1 s63150020.Stroj_mn\
-		-2 s87654321.Stroj_OldPanda\
+		-2 $(OPPONENT)\
 		-d local/dnevnik.txt -n $(GAMES) -t $(TIME)\
 		-z 1 -zz 1000
 
