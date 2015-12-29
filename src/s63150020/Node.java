@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class Node {
     private static final double UCT_CONSTANT = 1.4;
+    private static final int SUBSET_SIZE = 10;
 
     private Node parent;
     private Node[] children;
@@ -89,7 +90,7 @@ public class Node {
         double bestScore = Double.NEGATIVE_INFINITY;
         Node child = null;
 
-        for(int i = 0; i < children.length / 10; i++) {
+        for(int i = 0; i < children.length / SUBSET_SIZE; i++) {
             Node n = children[generator.nextInt(children.length)];
             double score = n.getScore();
             if(score == Double.POSITIVE_INFINITY) {
