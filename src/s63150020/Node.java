@@ -1,6 +1,7 @@
 package s63150020;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Node {
@@ -40,6 +41,8 @@ public class Node {
     public double getScore() {
         if(isTerminal) {
             return Double.NEGATIVE_INFINITY;
+        } else if(nVisits == 0) {
+            return Double.POSITIVE_INFINITY;  // Checking for NaN takes too long
         }
 
         return getWinRatio() + UCT_CONSTANT * Math.sqrt(Math.log(parent.getNVisits()) / nVisits);
@@ -54,7 +57,7 @@ public class Node {
     }
 
     public void setIsTerminal(boolean isWinning) {
-        nWins = isWinning ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+        nWins = isWinning ? Integer.MIN_VALUE : Integer.MIN_VALUE;
         isTerminal = true;
         parent.updateScore(isWinning ? 1 : -1);
     }
@@ -82,13 +85,14 @@ public class Node {
         return children != null;
     }
 
-    public Node chooseChild() {
+    public Node chooseChild(Random generator) {
         double bestScore = Double.NEGATIVE_INFINITY;
         Node child = null;
 
-        for(Node n : children) {
+        for(int i = 0; i < children.length / 10; i++) {
+            Node n = children[generator.nextInt(children.length)];
             double score = n.getScore();
-            if(Double.isNaN(score)) {
+            if(score == Double.POSITIVE_INFINITY) {
                 return n;
             }
 

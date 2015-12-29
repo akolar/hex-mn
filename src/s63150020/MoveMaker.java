@@ -60,7 +60,6 @@ public class MoveMaker {
      * Note: If move is made in under 50 ms, supervisor does not substract time!
      */
     public Polje nextMove(long remainingTime) {
-        long startTime = System.currentTimeMillis();
         Polje move = null;
 
         if(strongPointsFree) {
@@ -79,9 +78,6 @@ public class MoveMaker {
             move = monteCarlo(allocatedTime);
         }
 
-        long elapsed = System.currentTimeMillis() - startTime;
-        Logger.log("Made move in %3d ms. %5d ms remaining", elapsed, remainingTime - elapsed);
-        
         assert(move != null);
         return move;
     }
@@ -187,16 +183,22 @@ public class MoveMaker {
     }
 
     private Polje monteCarlo(int allocatedTime) {
+        long nano = System.nanoTime();
+        long start = System.currentTimeMillis();
         Node root = new Node(null, null);
         root.createChildren(board.getFreeFields());
 
-        long start = System.currentTimeMillis();
+        int playouts = 0;
         while((System.currentTimeMillis() - start) < allocatedTime) {
             monteCarloUctSearch(root);
+            playouts++;
         }
 
         Field best = root.getBestMove();
         best.setOwner(Owner.Me);
+
+        long elapsed = System.nanoTime() - nano;
+        Logger.log("Found best move. Took %d ms for %d playouts (%d ns/p)", elapsed / 1000000, playouts, elapsed / playouts);
         return best.toPolje();
     }
 
@@ -207,7 +209,7 @@ public class MoveMaker {
         boolean playerMoves = true;
         int depth = 0;
         while(next.hasChildren() && (depth <= MAX_DEPTH)) {
-            next = next.chooseChild();
+            next = next.chooseChild(generator);
             next.getMove().simOwner(playerMoves ? Owner.Me : Owner.Other);
             playerMoves = !playerMoves;
             depth++;
