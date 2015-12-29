@@ -18,6 +18,8 @@ public class MoveMaker {
      */
     private final int TIME_CRITICAL = 500;
 
+    private final int MAX_DEPTH = 30;
+
     /**
      * Boolean indicating whether the player tries to connect edges vertically.
      */
@@ -204,7 +206,7 @@ public class MoveMaker {
         Node next = root;
         boolean playerMoves = true;
         int depth = 0;
-        while(next.hasChildren() && (depth <= 10)) {
+        while(next.hasChildren() && (depth <= MAX_DEPTH)) {
             next = next.chooseChild();
             next.getMove().simOwner(playerMoves ? Owner.Me : Owner.Other);
             playerMoves = !playerMoves;
