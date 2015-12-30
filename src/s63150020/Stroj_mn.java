@@ -44,7 +44,7 @@ public class Stroj_mn implements Stroj {
 
     @Override
     public void novaPartija(int dimensions, boolean isRed) {
-        Logger.log("New game started. Playing as %s.", isRed ? "red" : "blue");
+        Logger.info("New game started. Playing as %s.", isRed ? "red" : "blue");
 
         board = new Board(dimensions, isRed);
         movemaker = new MoveMaker(board, isRed);
@@ -72,6 +72,6 @@ public class Stroj_mn implements Stroj {
 
         playing = false;
 
-        Logger.log("Game %s. Current score: %d:%d", won ? "won" : "lost", score[0], score[1]);
+        Logger.info("Game %s. Current score: %d:%d", won ? "won" : "lost", score[0], score[1]);
     }
 }

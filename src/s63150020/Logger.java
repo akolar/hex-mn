@@ -3,7 +3,7 @@ package s63150020;
 
 public class Logger {
     public enum Verbosity {
-        All(5), Log(4), Warning(2), Error(1), Fatal(0);
+        Debug(5), Info(4), Warning(2), Error(1), Fatal(0);
 
         private int level;
         
@@ -26,10 +26,10 @@ public class Logger {
     }
 
     public static void setLevel(int newLevel) {
-        if(newLevel == Verbosity.All.getValue()) {
-            level = Verbosity.All;
-        } else if(newLevel == Verbosity.Log.getValue()) {
-            level = Verbosity.Log;
+        if(newLevel == Verbosity.Debug.getValue()) {
+            level = Verbosity.Debug;
+        } else if(newLevel == Verbosity.Info.getValue()) {
+            level = Verbosity.Info;
         } else if(newLevel == Verbosity.Warning.getValue()) {
             level = Verbosity.Warning;
         } else if(newLevel == Verbosity.Error.getValue()) {
@@ -39,16 +39,24 @@ public class Logger {
         }
     }
 
-    public static void log(String fstring, Object... fvalues) {
-        if(level.getValue() < Verbosity.Log.getValue()) {
+    public static void log(Verbosity level, String fstring, Object... fvalues) {
+        if(Logger.level.getValue() < level.getValue()) {
             return;
         }
 
         System.out.printf(LOG_TEMPLATE, Stroj_mn.NAME, String.format(fstring, fvalues));
     }
 
+    public static void debug(String fstring, Object... fvalues) {
+        log(Verbosity.Debug, fstring, fvalues);
+    }
+
+    public static void info(String fstring, Object... fvalues) {
+        log(Verbosity.Info, fstring, fvalues);
+    }
+
     public static void startUpSequence() {
-        if(level.getValue() < Verbosity.All.getValue()) {
+        if(level.getValue() < Verbosity.Info.getValue()) {
             return;
         }
 

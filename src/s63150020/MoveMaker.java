@@ -154,7 +154,7 @@ public class MoveMaker {
             }
         }
 
-        Logger.log("Time: %4d / %4d, nPasses: %d", System.currentTimeMillis() - start, allocatedTime, played);
+        Logger.debug("Time: %4d / %4d, nPasses: %d", System.currentTimeMillis() - start, allocatedTime, played);
 
         ArrayList<Integer> list = Utilities.findMax(gamesWon);
         Field best = empty.get(list.get(generator.nextInt(list.size())));
@@ -197,7 +197,7 @@ public class MoveMaker {
         best.setOwner(Owner.Me);
 
         long elapsed = System.currentTimeMillis() - start;
-        Logger.log("Simulated %d playouts in %d ms (%d us/p)", playouts, elapsed, elapsed * 1000 / playouts);
+        Logger.debug("Simulated %d playouts in %d ms (%d us/p)", playouts, elapsed, elapsed * 1000 / playouts);
 
         return best.toPolje();
     }
