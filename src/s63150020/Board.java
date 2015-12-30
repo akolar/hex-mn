@@ -1,6 +1,7 @@
 package s63150020;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.HashSet;
 
 import skupno.Polje;

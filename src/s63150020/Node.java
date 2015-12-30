@@ -5,8 +5,8 @@ import java.util.Random;
 
 
 public class Node {
-    private static final double UCT_CONSTANT = 1.4;
-    private static final int SUBSET_SIZE = 10;
+    public static final double UCT_CONSTANT = 0.5;
+    public static final int SUBSET_SIZE = 10;
 
     private Node parent;
     private Node[] children;

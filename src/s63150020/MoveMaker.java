@@ -16,9 +16,9 @@ public class MoveMaker {
      * Time treshold for falling back to emergency strategy.
      * In milliseconds.
      */
-    private final int TIME_CRITICAL = 500;
+    public static final int TIME_CRITICAL = 500;
 
-    private final int MAX_DEPTH = 30;
+    public static final int MAX_DEPTH = 30;
 
     /**
      * Boolean indicating whether the player tries to connect edges vertically.
@@ -183,7 +183,6 @@ public class MoveMaker {
     }
 
     private Polje monteCarlo(int allocatedTime) {
-        long nano = System.nanoTime();
         long start = System.currentTimeMillis();
         Node root = new Node(null, null);
         root.createChildren(board.getFreeFields());
@@ -197,8 +196,9 @@ public class MoveMaker {
         Field best = root.getBestMove();
         best.setOwner(Owner.Me);
 
-        long elapsed = System.nanoTime() - nano;
-        Logger.log("Found best move. Took %d ms for %d playouts (%d ns/p)", elapsed / 1000000, playouts, elapsed / playouts);
+        long elapsed = System.currentTimeMillis() - start;
+        Logger.log("Simulated %d playouts in %d ms (%d us/p)", playouts, elapsed, elapsed * 1000 / playouts);
+
         return best.toPolje();
     }
 

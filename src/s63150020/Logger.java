@@ -52,11 +52,8 @@ public class Logger {
             return;
         }
 
-        int center = 23 + (Stroj_mn.NAME.length() / 2);
-        String verPadding = "";
-        for(int i = 0; i < (center - (Stroj_mn.VERSION.length() / 2)); i++) {
-            verPadding += " ";
-        }
+        int boxSize = 46 + Stroj_mn.NAME.length();
+        int center = 23 + Stroj_mn.NAME.length() / 2; 
 
         String bottomBorder = "<<<";
         for(int i = 0; i < ((center * 2) - 6); i++) {
@@ -65,7 +62,23 @@ public class Logger {
         bottomBorder += ">>>";
 
         System.out.printf ("---------------------> %s <---------------------\n", Stroj_mn.NAME);
-        System.out.printf ("%sv%-4s\n", verPadding, Stroj_mn.VERSION);
+        System.out.println(centerText(String.format("v%-4s", Stroj_mn.VERSION), boxSize) + "\n");
+
+        System.out.println(centerText("Settings", boxSize));
+        System.out.printf ("Subset size:   1/%d\n", Node.SUBSET_SIZE);
+        System.out.printf ("MC-UCT const:  %.02f\n", Node.UCT_CONSTANT);
+        System.out.printf ("Max depth:     %d\n", MoveMaker.MAX_DEPTH);
+        System.out.printf ("Critical time: %d ms\n", MoveMaker.TIME_CRITICAL);
         System.out.println(bottomBorder);
+    }
+
+    private static String centerText(String text, int boxSize) {
+        int textStart = (boxSize / 2) - (text.length() / 2);
+        String padding = "";
+        for(int i = 0; i < textStart; i++) {
+            padding += " ";
+        }
+
+        return padding + text;
     }
 }
