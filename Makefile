@@ -14,7 +14,7 @@ build:
 all: build run
 
 vsself: build
-	java -cp build/classes ogrodje.Hex\
+	java -Xmx500m -cp build/classes ogrodje.Hex\
 		-s $(BSIZE)\
 		-i\
 		-1 s63150020.Stroj_mn\
@@ -23,7 +23,7 @@ vsself: build
 		-z 1 -zz 1000
 
 run: build
-	java -cp build/classes ogrodje.Hex\
+	java -Xmx500m -cp build/classes ogrodje.Hex\
 		-s $(BSIZE)\
 		-i\
 		-1 s63150020.Stroj_mn\
@@ -32,7 +32,7 @@ run: build
 		-z 1 -zz 1000
 
 human: build
-	java -cp build/classes ogrodje.Hex\
+	java -Xmx500m -cp build/classes ogrodje.Hex\
 		-s $(BSIZE)\
 		-i\
 		-1 s63150020.Stroj_mn\
