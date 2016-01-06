@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Node {
     public static final double UCT_CONSTANT = 0.5;
-    public static final int SUBSET_SIZE = 10;
+    public static final int SUBSET_SIZE = 5;
 
     private Node parent;
     private Node[] children;
@@ -90,6 +90,11 @@ public class Node {
         double bestScore = Double.NEGATIVE_INFINITY;
         Node child = null;
 
+        // It seems that the random selection of nodes gives better results
+        // int start = generator.nextInt(children.length);
+        // int end = start + children.length / SUBSET_SIZE;
+        // for(int i = start; i < end; i++) {
+        //     Node n = children[i % children.length];
         for(int i = 0; i < children.length / SUBSET_SIZE; i++) {
             Node n = children[generator.nextInt(children.length)];
             double score = n.getScore();
