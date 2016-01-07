@@ -8,7 +8,8 @@ import skupno.Polje;
 
 
 /**
- * Magic.
+ * This class provides methods for calculating the best next move in a game
+ * of Hex.
  */
 public class MoveMaker {
 
@@ -18,6 +19,9 @@ public class MoveMaker {
      */
     public static final int TIME_CRITICAL = 500;
 
+    /**
+     * Maximum depth of the tree-like stucture used by MC-UCT algorithm.
+     */
     public static final int MAX_DEPTH = 30;
 
     /**
@@ -40,13 +44,18 @@ public class MoveMaker {
     */
     private Random generator;
 
-
     /**
      * Indicates whether fields (center, center), (-1, 1) and (1, -1) are still free.
      */
     private boolean strongPointsFree = true;
 
-
+    /**
+     * Creates new instance of this class. 
+     *
+     * @param board the game board
+     * @param playsVertically true if player tries to connect the top and
+     *                        bottom edge
+     */
     public MoveMaker(Board board, boolean playsVertically) {
         this.board = board;
         this.boardDimensions = board.getDimensions();
@@ -55,9 +64,14 @@ public class MoveMaker {
     }
 
     /**
-     * Chooses the next move by using predefined presets or using MC-UCT algorithm.
+     * Chooses the next move by using predefined presets, randomly or using 
+     * MC-UCT algorithm. Method returns `Polje` that was chosen by the
+     * algorithm.
      *
      * Note: If move is made in under 50 ms, supervisor does not substract time!
+     *
+     * @param remainingTime total remaining time of the player.
+     * @return move
      */
     public Polje nextMove(long remainingTime) {
         Polje move = null;
@@ -82,6 +96,11 @@ public class MoveMaker {
         return move;
     }
 
+    /**
+     * If free, conquers the center field on the board.
+     *
+     * @return field where the move was made (null if no free field was found)
+     */
     private Polje makeFirstMove() {
         Polje move;
 
@@ -92,15 +111,6 @@ public class MoveMaker {
         }
         if(board.isFree(centerY, centerX)) {
             move = board.play(Owner.Me, centerY, centerX);
-        /*
-        } else if(boardDimensions > 6) {
-            strongPointsFree = false;
-            return null;
-        } else if(board.isFree(1, -1)) {
-            move = board.play(Owner.Me, 1, -1);
-        } else if(board.isFree(-1, 1)) {
-            move = board.play(Owner.Me, -1, 1);
-        */
         } else {
             strongPointsFree = false;
             return null;
@@ -117,6 +127,11 @@ public class MoveMaker {
         return move;
     }
 
+    /**
+     * Makes a random (but valid) move on the board.
+     *
+     * @return field where the move was made
+     */
     private Polje makeRandom() {
         Field move;
 
@@ -134,6 +149,13 @@ public class MoveMaker {
         return move.toPolje();
     }
 
+    /**
+     * Choses next move using the random game simulations without the use of
+     * any heuristic methods.
+     *
+     * @param allocatedTime time allocated for the simulations
+     * @return field where the move was made
+     */
     private Polje calculateMove(int allocatedTime) {
         ArrayList<Field> empty = board.getFreeFields();
         int[] gamesWon = new int[empty.size()];
@@ -163,6 +185,12 @@ public class MoveMaker {
         return best.toPolje();
     }
 
+    /**
+     * Simulates a random game for the specified next move.
+     *
+     * @param nextMove first move to be played
+     * @return true iff player won the game
+     */
     private boolean runSim(Field nextMove) {
         board.resetSim();
 
@@ -182,6 +210,13 @@ public class MoveMaker {
         return board.edgesConnected(Owner.Me, true);
     }
 
+    /**
+     * Chooses next move using the Monte Carlo UCT algorithm. 
+     * Uses value of `MAX_DEPTH` to limit the tree growth.
+     *
+     * @param allocatedTime time allocated for the simulations
+     * @return field where the move was made
+     */
     private Polje monteCarlo(int allocatedTime) {
         long start = System.currentTimeMillis();
         Node root = new Node(null, null);
@@ -202,6 +237,12 @@ public class MoveMaker {
         return best.toPolje();
     }
 
+    /**
+     * Executes first moves using the supplied tree of moves by always 
+     * choosing the most promising next move.
+     *
+     * @param root the root node of the tree
+     */
     private void monteCarloUctSearch(Node root) {
         board.resetSim();
 
@@ -225,6 +266,13 @@ public class MoveMaker {
         next.updateScore(status);
     }
 
+    /**
+     * Randomly plays out the remainder of the game in MC search.
+     *
+     * @param playerMoves true iff is players turn to move
+     * @return returns the score of the simulated game (1 if player won, 
+     *         0 otherwise)
+     */
     private int playout(boolean playerMoves) {
         boolean myTurn = playerMoves;
         ArrayList<Field> options = board.getFreeFields(true);
@@ -241,6 +289,13 @@ public class MoveMaker {
         return board.edgesConnected(Owner.Me, true) ? 1 : 0;
     }
 
+    /**
+     * Calclates the time allcoated for the next move.
+     * Considers the number of the remaining free fields on the board and 
+     * the total remaining time.
+     *
+     * @param remaining total remaining time for the player
+     */
     private int calcAllocatedTime(int remaining) {
         int free = board.getNFree();
 
